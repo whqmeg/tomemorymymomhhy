@@ -147,5 +147,53 @@
             <p>创建于 2025年08月19日</p>
         </footer>
     </div>
+     <script>
+        // 页面加载完成后自动播放音乐
+        document.addEventListener('DOMContentLoaded', function() {
+            const music = document.getElementById('bgMusic');
+            const toggleBtn = document.getElementById('musicToggle');
+            
+            // 尝试自动播放（需要用户交互后才能自动播放）
+            const playPromise = music.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    // 自动播放被阻止，显示提示
+                    console.log('自动播放被阻止，需要用户交互');
+                    toggleBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                    toggleBtn.title = '点击播放音乐';
+                });
+            }
+        });
+
+        // 切换音乐播放/暂停
+        function toggleMusic() {
+            const music = document.getElementById('bgMusic');
+            const toggleBtn = document.getElementById('musicToggle');
+            
+            if (music.paused) {
+                music.play();
+                toggleBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                toggleBtn.title = '点击暂停音乐';
+            } else {
+                music.pause();
+                toggleBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                toggleBtn.title = '点击播放音乐';
+            }
+        }
+
+        // 添加用户交互事件来解锁音频
+        document.body.addEventListener('click', function() {
+            const music = document.getElementById('bgMusic');
+            if (music.paused) {
+                // 用户点击后尝试播放
+                music.play().then(() => {
+                    document.getElementById('musicToggle').innerHTML = '<i class="fas fa-volume-up"></i>';
+                }).catch(error => {
+                    console.log('需要用户明确交互');
+                });
+            }
+        }, { once: true }); // 只执行一次
+    </script>
 </body>
 </html>
